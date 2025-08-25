@@ -6,10 +6,10 @@ namespace CustomerService.Application.Interfaces.Repositories
 {
     public interface ICustomerRepository
     {
-        Task<Customer> CreateAsync(Customer customer);
-        Task<Customer> GetByIdAsync(Guid id);
-        Task<Customer> GetByDocumentAsync(string document);
-        Task<Customer> UpdateAsync(Customer customer);
+        Task<Clientes> CreateAsync(Clientes customer);
+        Task<Clientes> GetByIdAsync(Guid id);
+        Task<Clientes> GetByDocumentAsync(string document);
+        Task<Clientes> UpdateAsync(Clientes customer);
         Task<bool> ExistsByDocumentAsync(string document);
     }
 }

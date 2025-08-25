@@ -9,27 +9,27 @@ namespace CustomerService.Infrastructure.Persistence
 {
     public class InMemoryCustomerRepository : ICustomerRepository
     {
-        private readonly ConcurrentDictionary<Guid, Customer> _customers = new();
+        private readonly ConcurrentDictionary<Guid, Clientes> _customers = new();
 
-        public Task<Customer> CreateAsync(Customer customer)
+        public Task<Clientes> CreateAsync(Clientes customer)
         {
             _customers.TryAdd(customer.Id, customer);
             return Task.FromResult(customer);
         }
 
-        public Task<Customer> GetByIdAsync(Guid id)
+        public Task<Clientes> GetByIdAsync(Guid id)
         {
             _customers.TryGetValue(id, out var customer);
             return Task.FromResult(customer);
         }
 
-        public Task<Customer> GetByDocumentAsync(string document)
+        public Task<Clientes> GetByDocumentAsync(string document)
         {
-            var customer = _customers.Values.FirstOrDefault(c => c.Document == document);
+            var customer = _customers.Values.FirstOrDefault(c => c.CPF == document);
             return Task.FromResult(customer);
         }
 
-        public Task<Customer> UpdateAsync(Customer customer)
+        public Task<Clientes> UpdateAsync(Clientes customer)
         {
             _customers.TryUpdate(customer.Id, customer, _customers[customer.Id]);
             return Task.FromResult(customer);
@@ -37,7 +37,7 @@ namespace CustomerService.Infrastructure.Persistence
 
         public Task<bool> ExistsByDocumentAsync(string document)
         {
-            var exists = _customers.Values.Any(c => c.Document == document);
+            var exists = _customers.Values.Any(c => c.CPF == document);
             return Task.FromResult(exists);
         }
     }

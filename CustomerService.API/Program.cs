@@ -1,5 +1,12 @@
-using CustomerService.Infrastructure;
+ï»¿using Cliente.Infrastructure.BackgroundServices;
+using CustomerService.Application.Commands;
+using CustomerService.Application.Commands.Handlers;
+using CustomerService.Domain.Entities.Repositories;
+using CustomerService.Domain.Interfaces;
+using CustomerService.Infrastructure.Services;
+using CustomerService.Infrastructure.Services.Interfaces;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +19,26 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "Customer Service API",
         Version = "v1",
-        Description = "API para gerenciamento de clientes e integração com proposta de crédito e emissão de cartões"
+        Description = "API para gerenciamento de clientes e integraÃ§Ã£o com proposta de crÃ©dito e emissÃ£o de cartÃµes"
     });
+});
+
+// Registrar MediatR com todos os assemblies necessÃ¡rios
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()); // Projeto API
+    cfg.RegisterServicesFromAssembly(typeof(CadastroClienteCommand).Assembly); // Projeto Application
+    cfg.RegisterServicesFromAssembly(typeof(CadastroClienteCommandHandler).Assembly); // Mesmo assembly do Handler
+    cfg.RegisterServicesFromAssembly(typeof(StatusCreditoPropostaEventHandler).Assembly);
 });
 
 // Add Infrastructure services
 builder.Services.AddInfrastructure();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IMessageBus, MessageBus>();
+
+// ðŸ‘‰ Adicionando o HostedService (Worker que consome a fila/exchange do RabbitMQ)
+builder.Services.AddHostedService<ErroGeracaoCartaoWorker>();
 
 var app = builder.Build();
 
