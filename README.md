@@ -1,1 +1,1 @@
-Link para a documentação: https://claude.ai/public/artifacts/1ffba222-6515-49b1-8135-bb325f300707
+Link para a documentação: https://claude.ai/public/artifacts/32466491-c0de-4eea-9164-9da84fc22f17
